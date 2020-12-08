@@ -58,30 +58,6 @@ publishing {
     }
 }
 
-compileJava.dependsOn('openApiGenerate')
-
-def output = "$buildDir/generated"
-def spec = "$projectDir/src/main/resources/changelly-openapi.yaml"
-sourceSets.main.java.srcDir new File(buildDir, 'generated/src/main/java')
-
-clean.doFirst {
-    delete(output)
-}
-
-openApiGenerate {
-    generatorName = "java"
-    inputSpec = spec.toString()
-    outputDir = output.toString()
-    apiPackage = "ru.prpaha.changelly.api"
-    invokerPackage = "ru.prpaha.changelly.invoker"
-    modelPackage = "ru.prpaha.changelly.model"
-    generateApiTests = false
-    generateModelTests = false
-    configOptions = [
-            dateLibrary: "legacy"
-    ]
-}
-
 configurations {
     fatJar
 }
@@ -102,16 +78,13 @@ task fatJar(type: Jar) {
 
 dependencies {
     implementation "org.springframework:spring-context:5.1.6.RELEASE"
-    // for OpenAPI generation
-    implementation 'org.openapitools:openapi-generator-gradle-plugin:4.3.1'
+
     implementation 'com.google.code.gson:gson:2.8.5'
     fatJar 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     fatJar 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     fatJar 'com.squareup.okhttp3:logging-interceptor:4.9.0'
-    implementation 'io.gsonfire:gson-fire:1.8.4'
-    fatJar 'io.gsonfire:gson-fire:1.8.4'
 
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'

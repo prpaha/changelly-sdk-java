@@ -1,6 +1,2 @@
 changelly:
-  mainNet: false
   apiKey: 'apiKey'
-  walletId: 'walletId'
-  partnerName: 'partnerName'
-  partnerUrl: 'partnerUrl'

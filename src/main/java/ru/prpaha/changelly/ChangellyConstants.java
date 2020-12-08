@@ -5,9 +5,9 @@ package ru.prpaha.changelly;
  */
 public class ChangellyConstants {
 
-    public static final String API_KEY_PREFIX = "ApiKey";
+    public static final String API_KEY_PREFIX = "api-key";
+    public static final String SIGN_PREFIX = "sign";
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    public static final String MAIN_NET_URL = "https://backend-wallet-api.simplexcc.com";
-    public static final String TEST_NET_URL = "https://sandbox.test-simplexcc.com";
+    public static final String MAIN_NET_URL = "https://api.changelly.com";
 
 }
