@@ -1,1 +1,2 @@
-# changelly-sdk-java
+Changelly SDK for JAVA
+======
