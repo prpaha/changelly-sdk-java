@@ -2,10 +2,12 @@ package ru.prpaha.changelly.service;
 
 import ru.prpaha.changelly.dto.RPCRequest;
 import ru.prpaha.changelly.dto.RPCResponse;
+import ru.prpaha.changelly.exceptions.ChangellyHandleException;
 
 /**
  * @author Proskurin Pavel (prpaha@rambler.ru)
  */
 public interface ChangellyClient {
-    <REQUEST, RESPONSE> RPCRequest<REQUEST> invoke(RPCResponse<RESPONSE> response);
+    <REQUEST extends RPCRequest<?>, RESPONSE extends RPCResponse<?>> RESPONSE invoke(REQUEST request,
+                                                                                     Class<RESPONSE> clazz) throws ChangellyHandleException;
 }

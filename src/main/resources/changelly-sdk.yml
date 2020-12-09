@@ -1,2 +1,6 @@
 changelly:
   apiKey: 'apiKey'
+  apiSecret: 'apiSecret'
+  logging: true
+  cache: true
+  cacheSize: 50000000
