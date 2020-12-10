@@ -1,6 +1,8 @@
 package ru.prpaha.changelly.service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -9,6 +11,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.springframework.util.StringUtils;
+import ru.prpaha.changelly.dto.Error;
 import ru.prpaha.changelly.dto.requests.RPCRequest;
 import ru.prpaha.changelly.dto.responses.RPCResponse;
 import ru.prpaha.changelly.exceptions.ChangellyExchangeException;
@@ -30,6 +34,10 @@ public class ChangellyClientImpl implements ChangellyClient {
     private static final String API_KEY = "api-key";
     private static final String SIGN = "sign";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+    private static final String ERROR = "error";
+    private static final String CODE = "code";
+    private static final String MESSAGE = "message";
 
     private final String apiKey;
     private final String apiSecret;
@@ -61,18 +69,36 @@ public class ChangellyClientImpl implements ChangellyClient {
             Response response = call.execute();
             Optional<ResponseBody> body = Optional.ofNullable(response.body());
             if (!response.isSuccessful()) {
-                throw new ChangellyHandleException(response.code(), body.isPresent() ? response.body().string() : null);
+                throw new ChangellyHandleException(new Error(response.code(),
+                        body.isPresent() ? response.body().string() : null));
             }
             if (!body.isPresent()) {
                 throw new ChangellyExchangeException();
             }
-            return gson.fromJson(body.get().string(), clazz);
+            String responseBodyString = body.get().string();
+            checkError(responseBodyString);
+            return gson.fromJson(responseBodyString, clazz);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
             throw new SignNotCompiled(e);
         } catch (IOException e) {
             e.printStackTrace();
             throw new ChangellyExchangeException(e);
+        }
+    }
+
+    private void checkError(final String body) throws IOException, ChangellyHandleException {
+        if (StringUtils.isEmpty(body)) {
+            throw new ChangellyExchangeException();
+        }
+
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(body).getAsJsonObject();
+        if (jsonObject.has(ERROR)) {
+            JsonObject error = jsonObject.getAsJsonObject(ERROR);
+            int code = error.get(CODE).getAsInt();
+            String message = error.get(MESSAGE).getAsString();
+            throw new ChangellyHandleException(new Error(code, message));
         }
     }
 

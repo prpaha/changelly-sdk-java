@@ -1,9 +1,12 @@
 package ru.prpaha.changelly;
 
+import ru.prpaha.changelly.dto.Error;
 import ru.prpaha.changelly.dto.TestRequest;
 import ru.prpaha.changelly.dto.TestResponse;
 import ru.prpaha.changelly.dto.TestResponseData;
+import ru.prpaha.changelly.dto.responses.RPCErrorResponse;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -20,4 +23,8 @@ public class TestDataProvider {
         return new TestRequest(UUID.randomUUID().toString(), UUID.randomUUID().toString());
     }
 
+    public static RPCErrorResponse getErrorResponse() {
+        return new RPCErrorResponse(UUID.randomUUID().toString(), UUID.randomUUID().toString(),
+                new Error(new Random().nextInt(), UUID.randomUUID().toString()));
+    }
 }

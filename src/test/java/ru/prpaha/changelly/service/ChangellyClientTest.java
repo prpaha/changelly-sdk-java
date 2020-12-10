@@ -20,6 +20,7 @@ import ru.prpaha.changelly.dto.TestResponse;
 import ru.prpaha.changelly.dto.TestResponseData;
 import ru.prpaha.changelly.dto.requests.GetCurrenciesRequest;
 import ru.prpaha.changelly.dto.responses.CurrenciesResponse;
+import ru.prpaha.changelly.dto.responses.RPCErrorResponse;
 import ru.prpaha.changelly.exceptions.ChangellyExchangeException;
 import ru.prpaha.changelly.exceptions.ChangellyHandleException;
 
@@ -67,7 +68,7 @@ public class ChangellyClientTest {
     }
 
     @Test
-    public void invokeHandleError() throws IOException {
+    public void invokeHandleHttpStatusError() throws IOException {
         Gson gson = new Gson();
 
         Call call = Mockito.mock(Call.class);
@@ -88,6 +89,33 @@ public class ChangellyClientTest {
             Assertions.fail();
         } catch (ChangellyHandleException e) {
 
+        }
+    }
+
+    @Test
+    public void invokeHandleBodyError() throws IOException {
+        Gson gson = new Gson();
+
+        Call call = Mockito.mock(Call.class);
+        Mockito.when(httpClient.newCall(Mockito.any())).thenReturn(call);
+
+        RPCErrorResponse errorResponse = TestDataProvider.getErrorResponse();
+        ResponseBody responseBody = ResponseBody.create(gson.toJson(errorResponse), MEDIA_TYPE);
+
+        Response response = Mockito.mock(Response.class);
+        Mockito.when(response.body()).thenReturn(responseBody);
+        Mockito.when(response.isSuccessful()).thenReturn(true);
+
+        Mockito.when(call.execute()).thenReturn(response);
+
+        ChangellyClient client = getClient(gson);
+        try {
+            client.invoke(TestDataProvider.getRequest(), TestResponse.class);
+            Assertions.fail();
+        } catch (ChangellyHandleException e) {
+            Assertions.assertNotNull(e.getError());
+            Assertions.assertEquals(e.getError().getCode(), errorResponse.getError().getCode());
+            Assertions.assertEquals(e.getError().getMessage(), errorResponse.getError().getMessage());
         }
     }
 
