@@ -1,16 +1,18 @@
-package ru.prpaha.changelly.dto;
+package ru.prpaha.changelly.dto.requests;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author Proskurin Pavel (prpaha@rambler.ru)
  */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RPCRequest<PARAMS> {
 
-    private final String jsonrpc;
+    private static final String DEFAULT_JSONRPC = "2.0";
+
+    private String jsonrpc = DEFAULT_JSONRPC;
     private final String id;
     private final String method;
     private final PARAMS params;

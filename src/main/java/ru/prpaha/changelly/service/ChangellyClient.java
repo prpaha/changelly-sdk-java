@@ -1,7 +1,7 @@
 package ru.prpaha.changelly.service;
 
-import ru.prpaha.changelly.dto.RPCRequest;
-import ru.prpaha.changelly.dto.RPCResponse;
+import ru.prpaha.changelly.dto.requests.RPCRequest;
+import ru.prpaha.changelly.dto.responses.RPCResponse;
 import ru.prpaha.changelly.exceptions.ChangellyHandleException;
 
 /**

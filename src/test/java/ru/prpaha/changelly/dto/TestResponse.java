@@ -1,5 +1,7 @@
 package ru.prpaha.changelly.dto;
 
+import ru.prpaha.changelly.dto.responses.RPCResponse;
+
 import java.util.UUID;
 
 /**

@@ -1,20 +1,22 @@
 package ru.prpaha.changelly.service;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import okhttp3.*;
-import org.springframework.beans.factory.annotation.Value;
-import ru.prpaha.changelly.dto.RPCRequest;
-import ru.prpaha.changelly.dto.RPCResponse;
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import ru.prpaha.changelly.dto.requests.RPCRequest;
+import ru.prpaha.changelly.dto.responses.RPCResponse;
 import ru.prpaha.changelly.exceptions.ChangellyExchangeException;
 import ru.prpaha.changelly.exceptions.ChangellyHandleException;
 import ru.prpaha.changelly.exceptions.SignNotCompiled;
 import ru.prpaha.changelly.utils.SignBuilder;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -61,7 +63,7 @@ public class ChangellyClientImpl implements ChangellyClient {
             if (!response.isSuccessful()) {
                 throw new ChangellyHandleException(response.code(), body.isPresent() ? response.body().string() : null);
             }
-            if (body.isEmpty()) {
+            if (!body.isPresent()) {
                 throw new ChangellyExchangeException();
             }
             return gson.fromJson(body.get().string(), clazz);

@@ -2,7 +2,6 @@ package ru.prpaha.changelly;
 
 import com.google.gson.Gson;
 import okhttp3.Cache;
-import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.beans.factory.annotation.Qualifier;

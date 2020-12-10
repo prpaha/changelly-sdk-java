@@ -1,4 +1,4 @@
-package ru.prpaha.changelly.dto;
+package ru.prpaha.changelly.dto.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

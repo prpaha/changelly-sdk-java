@@ -1,7 +1,11 @@
 package ru.prpaha.changelly.service;
 
 import com.google.gson.Gson;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -10,11 +14,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import ru.prpaha.changelly.TestDataProvider;
-import ru.prpaha.changelly.dto.*;
+import ru.prpaha.changelly.dto.Currencies;
+import ru.prpaha.changelly.dto.TestRequest;
+import ru.prpaha.changelly.dto.TestResponse;
+import ru.prpaha.changelly.dto.TestResponseData;
+import ru.prpaha.changelly.dto.requests.GetCurrenciesRequest;
+import ru.prpaha.changelly.dto.responses.CurrenciesResponse;
 import ru.prpaha.changelly.exceptions.ChangellyExchangeException;
 import ru.prpaha.changelly.exceptions.ChangellyHandleException;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -22,6 +32,8 @@ import java.util.UUID;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ChangellyClientTest {
+
+    private static final MediaType MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
 
     @Mock
     private OkHttpClient httpClient;
@@ -35,7 +47,7 @@ public class ChangellyClientTest {
 
         TestResponseData responseData = new TestResponseData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         TestResponse testResponse = new TestResponse(responseData);
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MediaType.get("application/json; charset=utf-8"));
+        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MEDIA_TYPE);
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(responseBody);
@@ -62,7 +74,7 @@ public class ChangellyClientTest {
         Mockito.when(httpClient.newCall(Mockito.any())).thenReturn(call);
 
         TestResponse testResponse = TestDataProvider.getResponse();
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MediaType.get("application/json; charset=utf-8"));
+        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MEDIA_TYPE);
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(responseBody);
@@ -87,7 +99,7 @@ public class ChangellyClientTest {
         Mockito.when(httpClient.newCall(Mockito.any())).thenReturn(call);
 
         TestResponse testResponse = TestDataProvider.getResponse();
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MediaType.get("application/json; charset=utf-8"));
+        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MEDIA_TYPE);
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(null);
@@ -102,6 +114,38 @@ public class ChangellyClientTest {
         } catch (ChangellyExchangeException e) {
 
         }
+    }
+
+    @Test
+    public void getCurrenciesSuccess() throws IOException, ChangellyHandleException {
+        Gson gson = new Gson();
+
+        Call call = Mockito.mock(Call.class);
+        Mockito.when(httpClient.newCall(Mockito.any())).thenReturn(call);
+
+        CurrenciesResponse currenciesResponse = new CurrenciesResponse(UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(), Arrays.asList(
+                        Currencies.btc,
+                        Currencies.doge,
+                        Currencies.eth,
+                        Currencies.lsk,
+                        Currencies.xem,
+                        Currencies.zec
+        ));
+        ResponseBody responseBody = ResponseBody.create(gson.toJson(currenciesResponse), MEDIA_TYPE);
+
+        Response response = Mockito.mock(Response.class);
+        Mockito.when(response.body()).thenReturn(responseBody);
+        Mockito.when(response.isSuccessful()).thenReturn(true);
+
+        Mockito.when(call.execute()).thenReturn(response);
+
+        ChangellyClient client = getClient(gson);
+        CurrenciesResponse result = client.invoke(new GetCurrenciesRequest(), CurrenciesResponse.class);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getId(), currenciesResponse.getId());
+        Assertions.assertEquals(result.getJsonrpc(), currenciesResponse.getJsonrpc());
+        Assertions.assertEquals(result.getResult().size(), currenciesResponse.getResult().size());
     }
 
 }
