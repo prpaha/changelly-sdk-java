@@ -3,7 +3,7 @@ package ru.prpaha.changelly.dto;
 /**
  * @author Proskurin Pavel (prpaha@rambler.ru)
  */
-public enum Currencies {
+public enum Currency {
     btc,
     ltc,
     eth,

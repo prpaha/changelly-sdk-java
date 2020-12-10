@@ -1,6 +1,6 @@
 package ru.prpaha.changelly.repository;
 
-import ru.prpaha.changelly.dto.Currencies;
+import ru.prpaha.changelly.dto.Currency;
 import ru.prpaha.changelly.exceptions.ChangellyHandleException;
 
 import java.util.Collection;
@@ -11,5 +11,5 @@ import java.util.Collection;
 public interface ClassifiersRepository {
 
 
-    Collection<Currencies> getCurrencies() throws ChangellyHandleException;
+    Collection<Currency> getCurrencies() throws ChangellyHandleException;
 }

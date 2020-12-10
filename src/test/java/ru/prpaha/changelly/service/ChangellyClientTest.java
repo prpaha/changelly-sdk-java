@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import ru.prpaha.changelly.TestDataProvider;
-import ru.prpaha.changelly.dto.Currencies;
+import ru.prpaha.changelly.dto.Currency;
 import ru.prpaha.changelly.dto.TestRequest;
 import ru.prpaha.changelly.dto.TestResponse;
 import ru.prpaha.changelly.dto.TestResponseData;
@@ -125,12 +125,12 @@ public class ChangellyClientTest {
 
         CurrenciesResponse currenciesResponse = new CurrenciesResponse(UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(), Arrays.asList(
-                        Currencies.btc,
-                        Currencies.doge,
-                        Currencies.eth,
-                        Currencies.lsk,
-                        Currencies.xem,
-                        Currencies.zec
+                        Currency.btc,
+                        Currency.doge,
+                        Currency.eth,
+                        Currency.lsk,
+                        Currency.xem,
+                        Currency.zec
         ));
         ResponseBody responseBody = ResponseBody.create(gson.toJson(currenciesResponse), MEDIA_TYPE);
 
