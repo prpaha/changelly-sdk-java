@@ -24,19 +24,22 @@ public class CreateFixTransaction {
     private String extraId;
     private String refundExtraId;
 
-    private CreateFixTransaction(Currency from, Currency to, String address,
-                                 BigDecimal amountFrom, BigDecimal amountTo, String rateId) {
+    private CreateFixTransaction(Currency from, Currency to, String address, BigDecimal amountFrom,
+                                 BigDecimal amountTo, String refundAddress, String rateId) {
         this.from = from;
         this.to = to;
         this.address = address;
         this.amountFrom = amountFrom;
         this.amountTo = amountTo;
+        this.refundAddress = refundAddress;
         this.rateId = rateId;
     }
 
     public static Builder createWithAmountFrom(final Currency from, final Currency to, final String address,
-                                               final BigDecimal amountFrom, final String rateId) {
-        if (from == null || to == null || StringUtils.isEmpty(address) || amountFrom == null || StringUtils.isEmpty(rateId)) {
+                                               final BigDecimal amountFrom, final String refundAddress,
+                                               final String rateId) {
+        if (from == null || to == null || StringUtils.isEmpty(address) || amountFrom == null
+                || StringUtils.isEmpty(rateId) || StringUtils.isEmpty(refundAddress)) {
             throw new IllegalArgumentException("One of arguments is blank");
         }
         return new Builder()
@@ -44,12 +47,15 @@ public class CreateFixTransaction {
                 .withTo(to)
                 .withAddress(address)
                 .withAmountFrom(amountFrom)
+                .withRefundAddress(refundAddress)
                 .withRateId(rateId);
     }
 
     public static Builder createWithAmountTo(final Currency from, final Currency to, final String address,
-                                             final BigDecimal amountTo, final String rateId) {
-        if (from == null || to == null || StringUtils.isEmpty(address) || amountTo == null || StringUtils.isEmpty(rateId)) {
+                                             final BigDecimal amountTo, final String refundAddress,
+                                             final String rateId) {
+        if (from == null || to == null || StringUtils.isEmpty(address) || amountTo == null
+                || StringUtils.isEmpty(rateId) || StringUtils.isEmpty(refundAddress)) {
             throw new IllegalArgumentException("One of arguments is blank");
         }
         return new Builder()
@@ -57,6 +63,7 @@ public class CreateFixTransaction {
                 .withTo(to)
                 .withAddress(address)
                 .withAmountTo(amountTo)
+                .withRefundAddress(refundAddress)
                 .withRateId(rateId);
     }
 
@@ -126,7 +133,8 @@ public class CreateFixTransaction {
                 throw new IllegalArgumentException("Amount can`t be 0");
             }
 
-            CreateFixTransaction transaction = new CreateFixTransaction(from, to, address, amountFrom, amountTo, rateId);
+            CreateFixTransaction transaction = new CreateFixTransaction(from, to, address, amountFrom,
+                    amountTo, refundAddress, rateId);
             transaction.extraId = extraId;
             transaction.refundAddress = refundAddress;
             transaction.refundExtraId = refundExtraId;
