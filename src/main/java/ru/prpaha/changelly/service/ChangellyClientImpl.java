@@ -33,7 +33,7 @@ public class ChangellyClientImpl implements ChangellyClient {
 
     private static final String API_KEY = "api-key";
     private static final String SIGN = "sign";
-    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private static final String ERROR = "error";
     private static final String CODE = "code";
@@ -64,7 +64,7 @@ public class ChangellyClientImpl implements ChangellyClient {
                     .url(serviceUrl)
                     .addHeader(API_KEY, apiKey)
                     .addHeader(SIGN, SignBuilder.build(apiSecret, requestBody))
-                    .post(RequestBody.create(requestBody, JSON))
+                    .post(RequestBody.create(JSON, requestBody))
                     .build());
             Response response = call.execute();
             Optional<ResponseBody> body = Optional.ofNullable(response.body());

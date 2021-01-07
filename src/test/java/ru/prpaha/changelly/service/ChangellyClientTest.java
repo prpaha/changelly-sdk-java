@@ -6,7 +6,6 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -34,7 +33,7 @@ import java.util.UUID;
 @RunWith(MockitoJUnitRunner.class)
 public class ChangellyClientTest {
 
-    private static final MediaType MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     @Mock
     private OkHttpClient httpClient;
@@ -48,7 +47,7 @@ public class ChangellyClientTest {
 
         TestResponseData responseData = new TestResponseData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         TestResponse testResponse = new TestResponse(responseData);
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MEDIA_TYPE);
+        ResponseBody responseBody = ResponseBody.create(MEDIA_TYPE, gson.toJson(testResponse));
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(responseBody);
@@ -62,7 +61,6 @@ public class ChangellyClientTest {
         Assertions.assertNotNull(result);
     }
 
-    @NotNull
     private ChangellyClientImpl getClient(Gson gson) {
         return new ChangellyClientImpl(UUID.randomUUID().toString(), UUID.randomUUID().toString(), "http://some.com", gson, httpClient);
     }
@@ -75,7 +73,7 @@ public class ChangellyClientTest {
         Mockito.when(httpClient.newCall(Mockito.any())).thenReturn(call);
 
         TestResponse testResponse = TestDataProvider.getResponse();
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MEDIA_TYPE);
+        ResponseBody responseBody = ResponseBody.create(MEDIA_TYPE, gson.toJson(testResponse));
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(responseBody);
@@ -100,7 +98,7 @@ public class ChangellyClientTest {
         Mockito.when(httpClient.newCall(Mockito.any())).thenReturn(call);
 
         RPCErrorResponse errorResponse = TestDataProvider.getErrorResponse();
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(errorResponse), MEDIA_TYPE);
+        ResponseBody responseBody = ResponseBody.create(MEDIA_TYPE, gson.toJson(errorResponse));
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(responseBody);
@@ -127,7 +125,7 @@ public class ChangellyClientTest {
         Mockito.when(httpClient.newCall(Mockito.any())).thenReturn(call);
 
         TestResponse testResponse = TestDataProvider.getResponse();
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(testResponse), MEDIA_TYPE);
+        ResponseBody responseBody = ResponseBody.create(MEDIA_TYPE, gson.toJson(testResponse));
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(null);
@@ -160,7 +158,7 @@ public class ChangellyClientTest {
                         Currency.xem,
                         Currency.zec
         ));
-        ResponseBody responseBody = ResponseBody.create(gson.toJson(currenciesResponse), MEDIA_TYPE);
+        ResponseBody responseBody = ResponseBody.create(MEDIA_TYPE, gson.toJson(currenciesResponse));
 
         Response response = Mockito.mock(Response.class);
         Mockito.when(response.body()).thenReturn(responseBody);
