@@ -40,7 +40,7 @@ repositories {
 }
 
 ext {
-    libVersion = '1.0.0'
+    libVersion = '1.1.0'
 }
 
 version = "${libVersion}"
